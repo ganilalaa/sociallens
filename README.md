@@ -9,6 +9,7 @@ A modern social media application built with Next.js, MongoDB, and NextAuth.js.
 - 🗄️ **Database**: MongoDB with Mongoose ODM
 - 🔒 **Protected Routes**: Middleware-based route protection
 - 📝 **Posts**: Create and view posts with images
+- 🖼️ **Create Post Modal**: Reusable modal for creating posts with image upload
 - 👥 **User Profiles**: User management with profile pictures and bios
 - 💬 **Comments**: Comment system on posts
 - ❤️ **Likes**: Like/unlike posts functionality
@@ -205,3 +206,46 @@ This project is licensed under the MIT License.
 ## Support
 
 For support, email support@sociallens.com or create an issue in the repository.
+
+## Create Post Feature
+
+The application includes a reusable modal component for creating posts:
+
+### Features:
+
+- **Image Upload**: Drag and drop or click to upload images
+- **Image Preview**: Real-time preview of selected images
+- **File Validation**: Supports common image formats with 5MB size limit
+- **Description**: Rich text description with character counter (500 max)
+- **Authentication**: Requires user login to create posts
+- **Responsive Design**: Works on all device sizes
+
+### Usage:
+
+1. Click the "Create" button in the sidebar
+2. Upload an image by clicking "Choose File" or dragging an image
+3. Add a description (optional but recommended)
+4. Click "Create Post" to publish
+
+### Technical Details:
+
+- **Component**: `CreatePostModal.jsx` in `/src/components/feed/`
+- **API Endpoint**: `POST /api/posts`
+- **Image Storage**: Base64 encoding (for demo purposes)
+- **Authentication**: NextAuth.js session-based
+- **Validation**: Client and server-side validation
+
+### Post Model Structure:
+
+```javascript
+{
+  author: User (ref),
+  description: String (max 500 chars),
+  media: {
+    url: String (base64 or URL),
+    type: String (enum: 'image', 'video')
+  },
+  createdAt: Date (auto-generated),
+  updatedAt: Date (auto-updated)
+}
+```

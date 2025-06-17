@@ -81,19 +81,9 @@ export default function Register() {
 
       setSuccessMessage("Registration successful! Redirecting to login...");
 
-      // Auto-login after successful registration
-      setTimeout(async () => {
-        const result = await signIn("credentials", {
-          email: formData.email,
-          password: formData.password,
-          redirect: false,
-        });
-
-        if (result?.error) {
-          router.push("/auth/login");
-        } else {
-          router.push("/");
-        }
+      // Redirect to login page after successful registration
+      setTimeout(() => {
+        router.push("/auth/login");
       }, 2000);
     } catch (error) {
       setErrorMessage(

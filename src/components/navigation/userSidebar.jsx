@@ -12,6 +12,7 @@ import {
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import CreatePostModal from "../feed/CreatePostModal";
 
 function ListItem({ children, className = "", onClick }) {
   const baseClass =
@@ -56,8 +57,14 @@ const UserSidebar = () => {
   };
 
   const handleLogout = () => {
-
     router.push("/login");
+  };
+
+  const handlePostCreated = (newPost) => {
+    // You can add logic here to refresh the feed or show a success message
+    console.log("New post created:", newPost);
+    // Optionally trigger a page refresh or update the feed
+    window.location.reload();
   };
 
   return (
@@ -150,11 +157,13 @@ const UserSidebar = () => {
           Notifications (Dummy)
         </div>
       )}
-      {showCreatePost && (
-        <div className="absolute top-0 left-full ml-2 bg-white text-black p-4 rounded shadow">
-          CreatePostTest (Dummy)
-        </div>
-      )}
+
+      {/* Create Post Modal */}
+      <CreatePostModal
+        isOpen={showCreatePost}
+        onClose={() => setShowCreatePost(false)}
+        onPostCreated={handlePostCreated}
+      />
     </div>
   );
 };
