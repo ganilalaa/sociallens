@@ -5,6 +5,7 @@ import TopBarSm from "@/components/navigation/topBarSm";
 import BottomBar from "@/components/navigation/bottomBar";
 import { useRouter } from "next/router";
 import { createContext, useContext, useState } from "react";
+import { SocketProvider } from "@/contexts/SocketContext";
 
 // Create context for search state
 const SearchContext = createContext();
@@ -52,20 +53,22 @@ export default function App({
 
   return (
     <SessionProvider session={session}>
-      <SearchProvider>
-        {!isLayoutExcluded && (
-          <>
-            <UserSidebar />
-            <TopBarSm />
-          </>
-        )}
+      <SocketProvider>
+        <SearchProvider>
+          {!isLayoutExcluded && (
+            <>
+              <UserSidebar />
+              <TopBarSm />
+            </>
+          )}
 
-        <MainContent isLayoutExcluded={isLayoutExcluded}>
-          <Component {...pageProps} />
-        </MainContent>
+          <MainContent isLayoutExcluded={isLayoutExcluded}>
+            <Component {...pageProps} />
+          </MainContent>
 
-        {!isLayoutExcluded && <BottomBar />}
-      </SearchProvider>
+          {!isLayoutExcluded && <BottomBar />}
+        </SearchProvider>
+      </SocketProvider>
     </SessionProvider>
   );
 }

@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useSocket } from "@/contexts/SocketContext";
 import CreatePostModal from "../feed/CreatePostModal";
 import SearchOverlay from "../feed/SearchOverlay";
 import { useSearch } from "@/pages/_app";
@@ -34,6 +35,7 @@ function HiddenText({ children }) {
 const UserSidebar = () => {
   const { data: session } = useSession();
   const { isSearchOpen, setIsSearchOpen } = useSearch();
+  const { unreadCount } = useSocket();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
   const router = useRouter();
@@ -84,10 +86,15 @@ const UserSidebar = () => {
               <HiddenText>Search</HiddenText>
             </ListItem>
 
-            <Link href="/inbox">
-              <ListItem>
+            <Link href="/messages">
+              <ListItem className="relative">
                 <MessageOutlined />
-                <HiddenText>Message</HiddenText>
+                <HiddenText>Messages</HiddenText>
+                {unreadCount > 0 && (
+                  <div className="absolute -top-1 -right-1 xl:static xl:ml-auto bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </div>
+                )}
               </ListItem>
             </Link>
 

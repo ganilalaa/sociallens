@@ -221,21 +221,32 @@ export default function ProfilePage() {
                     </button>
                   </div>
                 ) : (
-                  <button
-                    onClick={handleFollow}
-                    disabled={followLoading}
-                    className={`px-4 py-1 rounded text-sm font-medium ${
-                      isFollowing
-                        ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        : "bg-blue-500 text-white hover:bg-blue-600"
-                    } disabled:opacity-50`}
-                  >
-                    {followLoading
-                      ? "Loading..."
-                      : isFollowing
-                      ? "Following"
-                      : "Follow"}
-                  </button>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={handleFollow}
+                      disabled={followLoading}
+                      className={`px-4 py-1 rounded text-sm font-medium ${
+                        isFollowing
+                          ? "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                          : "bg-blue-500 text-white hover:bg-blue-600"
+                      } disabled:opacity-50`}
+                    >
+                      {followLoading
+                        ? "Loading..."
+                        : isFollowing
+                        ? "Following"
+                        : "Follow"}
+                    </button>
+                    <button
+                      onClick={() =>
+                        router.push(`/messages?user=${profile._id}`)
+                      }
+                      className="bg-green-500 text-white px-4 py-1 rounded text-sm hover:bg-green-600 flex items-center"
+                    >
+                      <MessageOutlined className="mr-1" />
+                      Message
+                    </button>
+                  </div>
                 )}
               </div>
 

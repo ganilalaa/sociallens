@@ -18,23 +18,30 @@ export default async function handler(req, res) {
     }
 
     const { q } = req.query;
+    const searchQuery = q ? q.trim() : "";
 
-    if (!q || q.trim().length === 0) {
-      return res.status(400).json({ message: "Search query is required" });
+    let users;
+
+    if (searchQuery.length === 0) {
+      // Return all users when no search query is provided
+      users = await User.find({
+        _id: { $ne: session.user.id }, // Exclude current user
+      })
+        .select("name username profilePicture bio followers following")
+        .limit(20)
+        .sort({ name: 1 });
+    } else {
+      // Search by username or name (case-insensitive)
+      users = await User.find({
+        $or: [
+          { username: { $regex: searchQuery, $options: "i" } },
+          { name: { $regex: searchQuery, $options: "i" } },
+        ],
+        _id: { $ne: session.user.id }, // Exclude current user
+      })
+        .select("name username profilePicture bio followers following")
+        .limit(10);
     }
-
-    const searchQuery = q.trim();
-
-    // Search by username or name (case-insensitive)
-    const users = await User.find({
-      $or: [
-        { username: { $regex: searchQuery, $options: "i" } },
-        { name: { $regex: searchQuery, $options: "i" } },
-      ],
-      _id: { $ne: session.user.id }, // Exclude current user
-    })
-      .select("name username profilePicture bio followers following")
-      .limit(10);
 
     res.status(200).json(users);
   } catch (error) {
