@@ -8,11 +8,15 @@ import {
   PlusSquareOutlined,
   BellTwoTone,
   DollarOutlined,
+  InfoCircleOutlined,
+  ContactsOutlined,
+  QuestionCircleOutlined,
+  FileTextOutlined,
 } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useSocket } from "@/contexts/SocketContext";
 import CreatePostModal from "../feed/CreatePostModal";
 import SearchOverlay from "../feed/SearchOverlay";
@@ -54,8 +58,17 @@ const UserSidebar = () => {
     setIsSearchOpen(false);
   };
 
-  const handleLogout = () => {
-    router.push("/login");
+  const handleLogout = async () => {
+    try {
+      await signOut({
+        callbackUrl: "/login",
+        redirect: true,
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Fallback to manual redirect if signOut fails
+      router.push("/login");
+    }
   };
 
   const handlePostCreated = (newPost) => {
@@ -74,7 +87,7 @@ const UserSidebar = () => {
             <h1 className="xl:hidden text-2xl font-bold">SL</h1>
             <p className="hidden xl:block">closer together</p>
           </div>
-          <ul className="mt-16">
+          <ul className="mt-8">
             <Link href="/">
               <ListItem>
                 <HomeOutlined />
@@ -139,6 +152,42 @@ const UserSidebar = () => {
               </Link>
             )}
           </ul>
+
+          {/* Static Pages Section */}
+          <div className="mt-4">
+            <div className="hidden xl:block text-xs text-gray-400 uppercase tracking-wider mb-2 px-2">
+              Information
+            </div>
+            <ul>
+              <Link href="/about">
+                <ListItem className="text-xs min-h-12">
+                  <InfoCircleOutlined />
+                  <HiddenText>About Us</HiddenText>
+                </ListItem>
+              </Link>
+
+              <Link href="/contact">
+                <ListItem className="text-xs min-h-12">
+                  <ContactsOutlined />
+                  <HiddenText>Contact</HiddenText>
+                </ListItem>
+              </Link>
+
+              <Link href="/faq">
+                <ListItem className="text-xs min-h-12">
+                  <QuestionCircleOutlined />
+                  <HiddenText>FAQ</HiddenText>
+                </ListItem>
+              </Link>
+
+              <Link href="/terms">
+                <ListItem className="text-xs min-h-12">
+                  <FileTextOutlined />
+                  <HiddenText>Terms</HiddenText>
+                </ListItem>
+              </Link>
+            </ul>
+          </div>
 
           <div className="absolute bottom-0 w-full">
             <ListItem className="border-b-0" onClick={handleLogout}>

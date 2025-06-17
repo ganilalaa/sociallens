@@ -5,6 +5,7 @@ import {
   DownOutlined,
   UpOutlined,
 } from "@ant-design/icons";
+import Footer from "@/components/layout/Footer";
 
 export default function FAQ({ faqs }) {
   const [openItems, setOpenItems] = useState(new Set());
@@ -29,177 +30,186 @@ export default function FAQ({ faqs }) {
         />
       </Head>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Frequently Asked Questions
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Find answers to the most common questions about SocialLens. Can't
-            find what you're looking for?{" "}
-            <a href="/contact" className="text-blue-600 hover:text-blue-700">
-              Contact us
-            </a>
-            .
-          </p>
+      <div className="min-h-screen flex flex-col">
+        <div className="flex-1">
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            {/* Hero Section */}
+            <div className="text-center mb-16">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                Frequently Asked Questions
+              </h1>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Find answers to the most common questions about SocialLens.
+                Can't find what you're looking for?{" "}
+                <a
+                  href="/contact"
+                  className="text-blue-600 hover:text-blue-700"
+                >
+                  Contact us
+                </a>
+                .
+              </p>
+            </div>
+
+            {/* FAQ Categories */}
+            <div className="space-y-12">
+              {/* Account & Security */}
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <QuestionCircleOutlined className="mr-3 text-blue-500" />
+                  Account & Security
+                </h2>
+                <div className="space-y-4">
+                  {faqs.account.map((faq, index) => (
+                    <div key={index} className="bg-white rounded-lg shadow-md">
+                      <button
+                        onClick={() => toggleItem(`account-${index}`)}
+                        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                      >
+                        <span className="font-semibold text-gray-900">
+                          {faq.question}
+                        </span>
+                        {openItems.has(`account-${index}`) ? (
+                          <UpOutlined className="text-gray-500" />
+                        ) : (
+                          <DownOutlined className="text-gray-500" />
+                        )}
+                      </button>
+                      {openItems.has(`account-${index}`) && (
+                        <div className="px-6 pb-4">
+                          <p className="text-gray-700 leading-relaxed">
+                            {faq.answer}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Posts & Content */}
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <QuestionCircleOutlined className="mr-3 text-green-500" />
+                  Posts & Content
+                </h2>
+                <div className="space-y-4">
+                  {faqs.content.map((faq, index) => (
+                    <div key={index} className="bg-white rounded-lg shadow-md">
+                      <button
+                        onClick={() => toggleItem(`content-${index}`)}
+                        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                      >
+                        <span className="font-semibold text-gray-900">
+                          {faq.question}
+                        </span>
+                        {openItems.has(`content-${index}`) ? (
+                          <UpOutlined className="text-gray-500" />
+                        ) : (
+                          <DownOutlined className="text-gray-500" />
+                        )}
+                      </button>
+                      {openItems.has(`content-${index}`) && (
+                        <div className="px-6 pb-4">
+                          <p className="text-gray-700 leading-relaxed">
+                            {faq.answer}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Privacy & Safety */}
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <QuestionCircleOutlined className="mr-3 text-purple-500" />
+                  Privacy & Safety
+                </h2>
+                <div className="space-y-4">
+                  {faqs.privacy.map((faq, index) => (
+                    <div key={index} className="bg-white rounded-lg shadow-md">
+                      <button
+                        onClick={() => toggleItem(`privacy-${index}`)}
+                        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                      >
+                        <span className="font-semibold text-gray-900">
+                          {faq.question}
+                        </span>
+                        {openItems.has(`privacy-${index}`) ? (
+                          <UpOutlined className="text-gray-500" />
+                        ) : (
+                          <DownOutlined className="text-gray-500" />
+                        )}
+                      </button>
+                      {openItems.has(`privacy-${index}`) && (
+                        <div className="px-6 pb-4">
+                          <p className="text-gray-700 leading-relaxed">
+                            {faq.answer}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Technical Support */}
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <QuestionCircleOutlined className="mr-3 text-orange-500" />
+                  Technical Support
+                </h2>
+                <div className="space-y-4">
+                  {faqs.technical.map((faq, index) => (
+                    <div key={index} className="bg-white rounded-lg shadow-md">
+                      <button
+                        onClick={() => toggleItem(`technical-${index}`)}
+                        className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                      >
+                        <span className="font-semibold text-gray-900">
+                          {faq.question}
+                        </span>
+                        {openItems.has(`technical-${index}`) ? (
+                          <UpOutlined className="text-gray-500" />
+                        ) : (
+                          <DownOutlined className="text-gray-500" />
+                        )}
+                      </button>
+                      {openItems.has(`technical-${index}`) && (
+                        <div className="px-6 pb-4">
+                          <p className="text-gray-700 leading-relaxed">
+                            {faq.answer}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Contact CTA */}
+            <div className="mt-16 bg-blue-50 rounded-lg p-8 text-center">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Still have questions?
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Can't find the answer you're looking for? Our support team is
+                here to help.
+              </p>
+              <a
+                href="/contact"
+                className="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Contact Support
+              </a>
+            </div>
+          </div>
         </div>
 
-        {/* FAQ Categories */}
-        <div className="space-y-12">
-          {/* Account & Security */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <QuestionCircleOutlined className="mr-3 text-blue-500" />
-              Account & Security
-            </h2>
-            <div className="space-y-4">
-              {faqs.account.map((faq, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-md">
-                  <button
-                    onClick={() => toggleItem(`account-${index}`)}
-                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
-                  >
-                    <span className="font-semibold text-gray-900">
-                      {faq.question}
-                    </span>
-                    {openItems.has(`account-${index}`) ? (
-                      <UpOutlined className="text-gray-500" />
-                    ) : (
-                      <DownOutlined className="text-gray-500" />
-                    )}
-                  </button>
-                  {openItems.has(`account-${index}`) && (
-                    <div className="px-6 pb-4">
-                      <p className="text-gray-700 leading-relaxed">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Posts & Content */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <QuestionCircleOutlined className="mr-3 text-green-500" />
-              Posts & Content
-            </h2>
-            <div className="space-y-4">
-              {faqs.content.map((faq, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-md">
-                  <button
-                    onClick={() => toggleItem(`content-${index}`)}
-                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
-                  >
-                    <span className="font-semibold text-gray-900">
-                      {faq.question}
-                    </span>
-                    {openItems.has(`content-${index}`) ? (
-                      <UpOutlined className="text-gray-500" />
-                    ) : (
-                      <DownOutlined className="text-gray-500" />
-                    )}
-                  </button>
-                  {openItems.has(`content-${index}`) && (
-                    <div className="px-6 pb-4">
-                      <p className="text-gray-700 leading-relaxed">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Privacy & Safety */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <QuestionCircleOutlined className="mr-3 text-purple-500" />
-              Privacy & Safety
-            </h2>
-            <div className="space-y-4">
-              {faqs.privacy.map((faq, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-md">
-                  <button
-                    onClick={() => toggleItem(`privacy-${index}`)}
-                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
-                  >
-                    <span className="font-semibold text-gray-900">
-                      {faq.question}
-                    </span>
-                    {openItems.has(`privacy-${index}`) ? (
-                      <UpOutlined className="text-gray-500" />
-                    ) : (
-                      <DownOutlined className="text-gray-500" />
-                    )}
-                  </button>
-                  {openItems.has(`privacy-${index}`) && (
-                    <div className="px-6 pb-4">
-                      <p className="text-gray-700 leading-relaxed">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Technical Support */}
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <QuestionCircleOutlined className="mr-3 text-orange-500" />
-              Technical Support
-            </h2>
-            <div className="space-y-4">
-              {faqs.technical.map((faq, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-md">
-                  <button
-                    onClick={() => toggleItem(`technical-${index}`)}
-                    className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
-                  >
-                    <span className="font-semibold text-gray-900">
-                      {faq.question}
-                    </span>
-                    {openItems.has(`technical-${index}`) ? (
-                      <UpOutlined className="text-gray-500" />
-                    ) : (
-                      <DownOutlined className="text-gray-500" />
-                    )}
-                  </button>
-                  {openItems.has(`technical-${index}`) && (
-                    <div className="px-6 pb-4">
-                      <p className="text-gray-700 leading-relaxed">
-                        {faq.answer}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Contact CTA */}
-        <div className="mt-16 bg-blue-50 rounded-lg p-8 text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">
-            Still have questions?
-          </h3>
-          <p className="text-gray-600 mb-6">
-            Can't find the answer you're looking for? Our support team is here
-            to help.
-          </p>
-          <a
-            href="/contact"
-            className="inline-block bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Contact Support
-          </a>
-        </div>
+        <Footer />
       </div>
     </>
   );

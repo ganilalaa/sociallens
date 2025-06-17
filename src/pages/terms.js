@@ -4,6 +4,7 @@ import {
   CheckCircleOutlined,
   ExclamationCircleOutlined,
 } from "@ant-design/icons";
+import Footer from "@/components/layout/Footer";
 
 export default function TermsAndConditions({ lastUpdated }) {
   return (
@@ -16,349 +17,304 @@ export default function TermsAndConditions({ lastUpdated }) {
         />
       </Head>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center">
-            <FileTextOutlined className="mr-3 text-blue-500" />
-            Terms & Conditions
-          </h1>
-          <p className="text-gray-600">Last updated: {lastUpdated}</p>
-        </div>
-
-        {/* Introduction */}
-        <div className="bg-blue-50 rounded-lg p-6 mb-8">
-          <p className="text-gray-700 leading-relaxed">
-            Welcome to SocialLens. By accessing and using our platform, you
-            agree to be bound by these Terms and Conditions. Please read them
-            carefully before using our services.
-          </p>
-        </div>
-
-        {/* Terms Sections */}
-        <div className="space-y-8">
-          {/* Acceptance of Terms */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              1. Acceptance of Terms
-            </h2>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <p className="text-gray-700 leading-relaxed mb-4">
-                By accessing or using SocialLens, you agree to be bound by these
-                Terms and Conditions. If you do not agree to these terms, please
-                do not use our platform.
-              </p>
-              <p className="text-gray-700 leading-relaxed">
-                We reserve the right to modify these terms at any time.
-                Continued use of the platform after changes constitutes
-                acceptance of the new terms.
-              </p>
-            </div>
-          </section>
-
-          {/* User Accounts */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              2. User Accounts
-            </h2>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">
-                      Account Creation
-                    </h3>
-                    <p className="text-gray-700 text-sm">
-                      You must provide accurate and complete information when
-                      creating your account. You are responsible for maintaining
-                      the security of your account credentials.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">
-                      Account Responsibility
-                    </h3>
-                    <p className="text-gray-700 text-sm">
-                      You are responsible for all activities that occur under
-                      your account. Notify us immediately of any unauthorized
-                      use.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <CheckCircleOutlined className="text-green-500 mt-1 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">
-                      Age Requirement
-                    </h3>
-                    <p className="text-gray-700 text-sm">
-                      You must be at least 13 years old to create an account.
-                      Users under 18 must have parental consent to use our
-                      services.
-                    </p>
-                  </div>
-                </div>
+      <div className="min-h-screen flex flex-col">
+        <div className="flex-1">
+          <div className="max-w-4xl mx-auto px-4 py-8">
+            {/* Hero Section */}
+            <div className="text-center mb-16">
+              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <FileTextOutlined className="text-4xl text-blue-600" />
               </div>
-            </div>
-          </section>
-
-          {/* Acceptable Use */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              3. Acceptable Use
-            </h2>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <p className="text-gray-700 leading-relaxed mb-4">
-                You agree to use SocialLens only for lawful purposes and in
-                accordance with these terms.
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                Terms & Conditions
+              </h1>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Last updated: {lastUpdated}
               </p>
+            </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-semibold text-green-600 mb-3 flex items-center">
-                    <CheckCircleOutlined className="mr-2" />
-                    What You Can Do
-                  </h3>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li>• Share original content and photos</li>
-                    <li>• Connect with friends and family</li>
-                    <li>• Engage in respectful discussions</li>
-                    <li>• Report inappropriate content</li>
-                    <li>• Customize your privacy settings</li>
+            {/* Terms Content */}
+            <div className="bg-white rounded-lg shadow-md p-8 space-y-8">
+              {/* Introduction */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  1. Introduction
+                </h2>
+                <p className="text-gray-700 leading-relaxed mb-4">
+                  Welcome to SocialLens. These Terms and Conditions ("Terms")
+                  govern your use of our website and services. By accessing or
+                  using SocialLens, you agree to be bound by these Terms and our
+                  Privacy Policy.
+                </p>
+                <p className="text-gray-700 leading-relaxed">
+                  If you do not agree to these Terms, please do not use our
+                  services. We reserve the right to modify these Terms at any
+                  time, and such modifications will be effective immediately
+                  upon posting.
+                </p>
+              </section>
+
+              {/* Definitions */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  2. Definitions
+                </h2>
+                <div className="space-y-3">
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">
+                      "Service"
+                    </h3>
+                    <p className="text-gray-700">
+                      Refers to the SocialLens website and mobile application.
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">"User"</h3>
+                    <p className="text-gray-700">
+                      Refers to any individual who accesses or uses our Service.
+                    </p>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">
+                      "Content"
+                    </h3>
+                    <p className="text-gray-700">
+                      Refers to any text, images, videos, or other materials
+                      posted on our platform.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* Account Registration */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  3. Account Registration
+                </h2>
+                <div className="space-y-4">
+                  <p className="text-gray-700 leading-relaxed">
+                    To use certain features of our Service, you must create an
+                    account. You agree to:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 text-gray-700">
+                    <li>
+                      Provide accurate, current, and complete information during
+                      registration
+                    </li>
+                    <li>
+                      Maintain and update your account information to keep it
+                      accurate and current
+                    </li>
+                    <li>Keep your password secure and confidential</li>
+                    <li>
+                      Accept responsibility for all activities that occur under
+                      your account
+                    </li>
+                    <li>
+                      Notify us immediately of any unauthorized use of your
+                      account
+                    </li>
                   </ul>
                 </div>
+              </section>
 
-                <div>
-                  <h3 className="font-semibold text-red-600 mb-3 flex items-center">
-                    <ExclamationCircleOutlined className="mr-2" />
-                    What You Cannot Do
-                  </h3>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li>• Share harmful or illegal content</li>
-                    <li>• Harass or bully other users</li>
-                    <li>• Impersonate others</li>
-                    <li>• Spam or send unwanted messages</li>
-                    <li>• Violate intellectual property rights</li>
+              {/* Acceptable Use */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  4. Acceptable Use Policy
+                </h2>
+                <div className="space-y-4">
+                  <p className="text-gray-700 leading-relaxed">
+                    You agree not to use our Service to:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 text-gray-700">
+                    <li>
+                      Post content that is illegal, harmful, threatening,
+                      abusive, or defamatory
+                    </li>
+                    <li>Harass, bully, or intimidate other users</li>
+                    <li>Impersonate another person or entity</li>
+                    <li>
+                      Share personal information of others without their consent
+                    </li>
+                    <li>Upload viruses, malware, or other harmful code</li>
+                    <li>Attempt to gain unauthorized access to our systems</li>
+                    <li>
+                      Use automated tools to scrape or collect data from our
+                      platform
+                    </li>
+                    <li>Violate any applicable laws or regulations</li>
                   </ul>
                 </div>
-              </div>
+              </section>
+
+              {/* Content Ownership */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  5. Content Ownership and License
+                </h2>
+                <div className="space-y-4">
+                  <p className="text-gray-700 leading-relaxed">
+                    You retain ownership of the content you post on SocialLens.
+                    However, by posting content, you grant us a worldwide,
+                    non-exclusive, royalty-free license to use, reproduce,
+                    modify, and distribute your content in connection with our
+                    Service.
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    You represent and warrant that you have all necessary rights
+                    to grant this license and that your content does not
+                    infringe on the rights of any third party.
+                  </p>
+                </div>
+              </section>
+
+              {/* Privacy */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  6. Privacy
+                </h2>
+                <p className="text-gray-700 leading-relaxed">
+                  Your privacy is important to us. Please review our Privacy
+                  Policy, which also governs your use of the Service, to
+                  understand our practices regarding the collection and use of
+                  your personal information.
+                </p>
+              </section>
+
+              {/* Intellectual Property */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  7. Intellectual Property Rights
+                </h2>
+                <div className="space-y-4">
+                  <p className="text-gray-700 leading-relaxed">
+                    The Service and its original content, features, and
+                    functionality are owned by SocialLens and are protected by
+                    international copyright, trademark, patent, trade secret,
+                    and other intellectual property laws.
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    You may not copy, modify, distribute, sell, or lease any
+                    part of our Service without our prior written consent.
+                  </p>
+                </div>
+              </section>
+
+              {/* Termination */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  8. Account Termination
+                </h2>
+                <div className="space-y-4">
+                  <p className="text-gray-700 leading-relaxed">
+                    We may terminate or suspend your account immediately,
+                    without prior notice, for conduct that we believe violates
+                    these Terms or is harmful to other users, us, or third
+                    parties.
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    You may terminate your account at any time by deleting it
+                    through your account settings. Upon termination, your right
+                    to use the Service will cease immediately.
+                  </p>
+                </div>
+              </section>
+
+              {/* Disclaimers */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  9. Disclaimers
+                </h2>
+                <div className="space-y-4">
+                  <p className="text-gray-700 leading-relaxed">
+                    THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT
+                    WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED.
+                  </p>
+                  <p className="text-gray-700 leading-relaxed">
+                    We do not guarantee that the Service will be uninterrupted,
+                    secure, or error-free, or that any defects will be
+                    corrected.
+                  </p>
+                </div>
+              </section>
+
+              {/* Limitation of Liability */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  10. Limitation of Liability
+                </h2>
+                <p className="text-gray-700 leading-relaxed">
+                  IN NO EVENT SHALL SOCIALLENS BE LIABLE FOR ANY INDIRECT,
+                  INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES,
+                  INCLUDING WITHOUT LIMITATION, LOSS OF PROFITS, DATA, USE,
+                  GOODWILL, OR OTHER INTANGIBLE LOSSES.
+                </p>
+              </section>
+
+              {/* Governing Law */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  11. Governing Law
+                </h2>
+                <p className="text-gray-700 leading-relaxed">
+                  These Terms shall be governed by and construed in accordance
+                  with the laws of [Your Jurisdiction], without regard to its
+                  conflict of law provisions.
+                </p>
+              </section>
+
+              {/* Changes to Terms */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  12. Changes to Terms
+                </h2>
+                <p className="text-gray-700 leading-relaxed">
+                  We reserve the right to modify these Terms at any time. We
+                  will notify users of any material changes by posting the new
+                  Terms on this page and updating the "Last updated" date.
+                </p>
+              </section>
+
+              {/* Contact Information */}
+              <section>
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  13. Contact Information
+                </h2>
+                <p className="text-gray-700 leading-relaxed">
+                  If you have any questions about these Terms, please contact us
+                  at:
+                </p>
+                <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                  <p className="text-gray-700">
+                    <strong>Email:</strong> legal@sociallens.com
+                    <br />
+                    <strong>Address:</strong> 123 Social Street, Tech City, TC
+                    12345
+                    <br />
+                    <strong>Phone:</strong> +1 (555) 123-4567
+                  </p>
+                </div>
+              </section>
             </div>
-          </section>
 
-          {/* Content Guidelines */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              4. Content Guidelines
-            </h2>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Your Content
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    You retain ownership of content you post, but grant us a
-                    license to use, display, and distribute it on our platform.
-                    You are responsible for ensuring you have the rights to
-                    share any content you post.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Prohibited Content
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    We prohibit content that is illegal, harmful, threatening,
-                    abusive, defamatory, obscene, or otherwise objectionable. We
-                    reserve the right to remove such content and suspend or
-                    terminate accounts that violate these guidelines.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Content Moderation
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    We use automated systems and human moderators to review
-                    content. We may remove content that violates our guidelines
-                    without prior notice.
-                  </p>
-                </div>
+            {/* Acceptance Section */}
+            <div className="mt-8 bg-green-50 rounded-lg p-6 text-center">
+              <div className="flex items-center justify-center mb-4">
+                <CheckCircleOutlined className="text-3xl text-green-600 mr-3" />
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Terms Acceptance
+                </h2>
               </div>
-            </div>
-          </section>
-
-          {/* Privacy and Data */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              5. Privacy and Data
-            </h2>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Data Collection
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    We collect and process your data as described in our Privacy
-                    Policy. By using our platform, you consent to such
-                    processing.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Data Security
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    We implement appropriate security measures to protect your
-                    data. However, no method of transmission over the internet
-                    is 100% secure.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Third-Party Services
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    Our platform may integrate with third-party services. These
-                    services have their own privacy policies and terms of
-                    service.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Intellectual Property */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              6. Intellectual Property
-            </h2>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Platform Rights
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    SocialLens and its original content, features, and
-                    functionality are owned by us and are protected by
-                    international copyright, trademark, and other intellectual
-                    property laws.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    User Content License
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    By posting content, you grant us a worldwide, non-exclusive,
-                    royalty-free license to use, reproduce, modify, and
-                    distribute your content on our platform.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Copyright Infringement
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    If you believe your copyright has been infringed, please
-                    contact us with the required information as outlined in our
-                    Copyright Policy.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Termination */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              7. Termination
-            </h2>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Account Termination
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    You may terminate your account at any time. We may terminate
-                    or suspend your account for violations of these terms.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">
-                    Effect of Termination
-                  </h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    Upon termination, your right to use the platform ceases
-                    immediately. We may retain certain information as required
-                    by law or for legitimate business purposes.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Limitation of Liability */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              8. Limitation of Liability
-            </h2>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <p className="text-gray-700 leading-relaxed">
-                To the maximum extent permitted by law, SocialLens shall not be
-                liable for any indirect, incidental, special, consequential, or
-                punitive damages resulting from your use of the platform.
+              <p className="text-gray-700">
+                By using SocialLens, you acknowledge that you have read,
+                understood, and agree to be bound by these Terms and Conditions.
               </p>
             </div>
-          </section>
-
-          {/* Contact Information */}
-          <section>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              9. Contact Information
-            </h2>
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <p className="text-gray-700 leading-relaxed mb-4">
-                If you have any questions about these Terms and Conditions,
-                please contact us:
-              </p>
-              <div className="space-y-2 text-gray-700">
-                <p>
-                  <strong>Email:</strong> legal@sociallens.com
-                </p>
-                <p>
-                  <strong>Address:</strong> 123 Social Street, Tech City, TC
-                  12345
-                </p>
-                <p>
-                  <strong>Phone:</strong> +1 (555) 123-4567
-                </p>
-              </div>
-            </div>
-          </section>
+          </div>
         </div>
 
-        {/* Footer */}
-        <div className="mt-12 text-center text-gray-600">
-          <p>
-            By using SocialLens, you acknowledge that you have read, understood,
-            and agree to be bound by these Terms and Conditions.
-          </p>
-        </div>
+        <Footer />
       </div>
     </>
   );
