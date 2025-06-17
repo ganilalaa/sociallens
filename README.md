@@ -1,40 +1,207 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Social Lens - Next.js Social Media App
 
-## Getting Started
+A modern social media application built with Next.js, MongoDB, and NextAuth.js.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- 🔐 **Authentication**: Secure user registration and login with NextAuth.js
+- 📱 **Responsive Design**: Mobile-first design with Tailwind CSS
+- 🗄️ **Database**: MongoDB with Mongoose ODM
+- 🔒 **Protected Routes**: Middleware-based route protection
+- 📝 **Posts**: Create and view posts with images
+- 👥 **User Profiles**: User management with profile pictures and bios
+- 💬 **Comments**: Comment system on posts
+- ❤️ **Likes**: Like/unlike posts functionality
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, Tailwind CSS
+- **Backend**: Next.js API Routes
+- **Database**: MongoDB with Mongoose
+- **Authentication**: NextAuth.js
+- **Styling**: Tailwind CSS v4
+- **Icons**: Ant Design Icons
+
+## Prerequisites
+
+- Node.js 18+
+- MongoDB (local or Atlas)
+- npm or yarn
+
+## Installation
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd sociallens
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   Create a `.env` file in the root directory:
+
+   ```env
+   # MongoDB
+   MONGODB_URI=mongodb://localhost:27017/sociallens
+   # For production: mongodb+srv://username:password@cluster.mongodb.net/sociallens
+
+   # NextAuth
+   NEXTAUTH_URL=http://localhost:3000
+   NEXTAUTH_SECRET=your-secret-key-here-change-in-production
+   ```
+
+4. **Set up MongoDB**
+
+   - **Local MongoDB**: Install and start MongoDB locally
+   - **MongoDB Atlas**: Create a cluster and get your connection string
+
+5. **Generate NextAuth Secret**
+
+   ```bash
+   openssl rand -base64 32
+   ```
+
+   Use the output as your `NEXTAUTH_SECRET`
+
+6. **Run the development server**
+
+   ```bash
+   npm run dev
+   ```
+
+7. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## Project Structure
+
+```
+sociallens/
+├── src/
+│   ├── components/          # React components
+│   │   ├── authentication/  # Auth-related components
+│   │   ├── feed/           # Post feed components
+│   │   └── navigation/     # Navigation components
+│   ├── lib/                # Utility functions
+│   │   ├── mongodb.js      # Database connection
+│   │   └── auth.js         # Auth utilities
+│   ├── models/             # Mongoose models
+│   │   ├── User.js         # User schema
+│   │   └── Post.js         # Post schema
+│   ├── pages/              # Next.js pages
+│   │   ├── api/            # API routes
+│   │   │   ├── auth/       # Auth API endpoints
+│   │   │   └── posts/      # Posts API endpoints
+│   │   └── auth/           # Auth pages
+│   └── styles/             # Global styles
+├── public/                 # Static assets
+├── middleware.js           # Next.js middleware
+└── next.config.mjs         # Next.js configuration
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API Endpoints
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### Authentication
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/[...nextauth]` - NextAuth endpoints
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### Posts
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `GET /api/posts` - Fetch all posts
+- `POST /api/posts` - Create a new post
 
-## Learn More
+## Database Models
 
-To learn more about Next.js, take a look at the following resources:
+### User Schema
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+```javascript
+{
+  name: String,
+  email: String (unique),
+  username: String (unique),
+  password: String (hashed),
+  profilePicture: String,
+  bio: String,
+  followers: [User],
+  following: [User],
+  posts: [Post],
+  createdAt: Date,
+  updatedAt: Date
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Post Schema
 
-## Deploy on Vercel
+```javascript
+{
+  author: User (ref),
+  description: String,
+  media: {
+    url: String,
+    type: String (enum: 'image', 'video')
+  },
+  likes: [User],
+  comments: [{
+    user: User,
+    text: String,
+    createdAt: Date
+  }],
+  isSponsored: Boolean,
+  createdAt: Date,
+  updatedAt: Date
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Environment Variables
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+| Variable          | Description               | Example                                |
+| ----------------- | ------------------------- | -------------------------------------- |
+| `MONGODB_URI`     | MongoDB connection string | `mongodb://localhost:27017/sociallens` |
+| `NEXTAUTH_URL`    | Your app's base URL       | `http://localhost:3000`                |
+| `NEXTAUTH_SECRET` | Secret for JWT encryption | `your-secret-key-here`                 |
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy!
+
+### Other Platforms
+
+- Set up environment variables
+- Build the project: `npm run build`
+- Start the production server: `npm start`
+
+## Security Features
+
+- ✅ Password hashing with bcryptjs
+- ✅ JWT-based authentication
+- ✅ Protected API routes
+- ✅ Input validation
+- ✅ CORS protection
+- ✅ Rate limiting (can be added)
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License.
+
+## Support
+
+For support, email support@sociallens.com or create an issue in the repository.
