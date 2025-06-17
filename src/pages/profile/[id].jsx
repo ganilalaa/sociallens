@@ -13,6 +13,7 @@ import {
   SettingOutlined,
 } from "@ant-design/icons";
 import EditProfileModal from "@/components/profile/EditProfileModal";
+import PostModal from "@/components/feed/PostModal";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -24,6 +25,8 @@ export default function ProfilePage() {
   const [isFollowing, setIsFollowing] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [showPostModal, setShowPostModal] = useState(false);
 
   const fetchProfile = useCallback(async () => {
     try {
@@ -105,6 +108,34 @@ export default function ProfilePage() {
   const handleEditModalClose = useCallback(() => {
     setShowEditModal(false);
   }, []);
+
+  const handlePostClick = useCallback((post) => {
+    setSelectedPost(post);
+    setShowPostModal(true);
+  }, []);
+
+  const handlePostModalClose = useCallback(() => {
+    setShowPostModal(false);
+    setSelectedPost(null);
+  }, []);
+
+  const handlePostUpdated = useCallback(
+    (updatedPost) => {
+      // Update the post in the profile's posts array
+      setProfile((prev) => ({
+        ...prev,
+        posts: prev.posts.map((post) =>
+          post._id === updatedPost._id ? updatedPost : post
+        ),
+      }));
+
+      // Update the selected post if it's the same one
+      if (selectedPost && selectedPost._id === updatedPost._id) {
+        setSelectedPost(updatedPost);
+      }
+    },
+    [selectedPost]
+  );
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -274,7 +305,8 @@ export default function ProfilePage() {
             {profile.posts.map((post) => (
               <div
                 key={post._id}
-                className="bg-gray-50 rounded-lg overflow-hidden"
+                className="bg-gray-50 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => handlePostClick(post)}
               >
                 <img
                   src={post.media.url}
@@ -311,6 +343,14 @@ export default function ProfilePage() {
         onClose={handleEditModalClose}
         onProfileUpdated={handleProfileUpdated}
         currentProfile={profile}
+      />
+
+      {/* Post Modal */}
+      <PostModal
+        post={selectedPost}
+        isOpen={showPostModal}
+        onClose={handlePostModalClose}
+        onPostUpdated={handlePostUpdated}
       />
     </div>
   );

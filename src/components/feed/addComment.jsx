@@ -1,42 +1,64 @@
 import React, { useState } from "react";
+import { useSession } from "next-auth/react";
 
 const AddComment = ({
   onCommentPosted,
-  post,
+  postId,
   parentComment,
   replying,
   setReplying,
   className = "",
 }) => {
   const [commentBody, setCommentBody] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { data: session } = useSession();
 
   const handleCommentChange = (e) => {
     setCommentBody(e.target.value);
   };
 
   const handlePostComment = async () => {
-    console.log("Posting comment:", commentBody);
+    if (!session) {
+      alert("Please log in to comment");
+      return;
+    }
 
+    if (!commentBody.trim()) {
+      return;
+    }
 
-    const fakeResponse = {
-      data: {
-        id: Date.now(),
-        content: commentBody,
-        commenter: {
-          username: "testuser", 
-          id: 123,
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`/api/posts/${postId}/comment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      },
-    };
+        body: JSON.stringify({ text: commentBody }),
+      });
 
-    onCommentPosted(fakeResponse.data);
+      if (!response.ok) {
+        throw new Error("Failed to post comment");
+      }
 
-    setCommentBody("");
-    if (setReplying) setReplying(false);
+      const data = await response.json();
+      onCommentPosted(data.post);
+      setCommentBody("");
+      if (setReplying) setReplying(false);
+    } catch (error) {
+      console.error("Error posting comment:", error);
+      alert("Failed to post comment. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === "Backspace" && commentBody.length === 0) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handlePostComment();
+    } else if (event.key === "Backspace" && commentBody.length === 0) {
       if (setReplying) setReplying(false);
     }
   };
@@ -53,15 +75,17 @@ const AddComment = ({
         value={commentBody}
         onChange={handleCommentChange}
         onKeyDown={handleKeyDown}
+        disabled={isSubmitting}
         className={`border-0 outline-none flex-1 ${className}`}
       />
       {commentBody.length > 0 && (
-        <div
-          className="flex-4 cursor-pointer text-cyan-600 font-bold"
+        <button
+          className="flex-4 cursor-pointer text-cyan-600 font-bold disabled:opacity-50"
           onClick={handlePostComment}
+          disabled={isSubmitting}
         >
-          {replying ? "Reply" : "Post"}
-        </div>
+          {isSubmitting ? "Posting..." : replying ? "Reply" : "Post"}
+        </button>
       )}
     </div>
   );

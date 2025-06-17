@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { MoreOutlined } from "@ant-design/icons";
-import ProfilePic from "./ProfilePic.jsx";
+import {
+  MoreOutlined,
+  HeartOutlined,
+  HeartFilled,
+  MessageOutlined,
+} from "@ant-design/icons";
+import { useSession } from "next-auth/react";
+import ProfilePic from "./profilePic.jsx";
+import AddComment from "./addComment.jsx";
+import CommentsDisplay from "./CommentsDisplay.jsx";
 
 const PostsFeed = () => {
   const [posts, setPosts] = useState([]);
@@ -28,6 +36,44 @@ const PostsFeed = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLikePost = async (postId, currentLikeStatus) => {
+    try {
+      const response = await fetch(`/api/posts/${postId}/like`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to like post");
+      }
+
+      const data = await response.json();
+
+      // Update the post in the posts array
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === postId
+            ? { ...post, likes: data.post.likes, isLiked: data.isLiked }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Error liking post:", error);
+      alert("Failed to like post. Please try again.");
+    }
+  };
+
+  const handleCommentPosted = (updatedPost) => {
+    // Update the post in the posts array
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post._id === updatedPost._id ? updatedPost : post
+      )
+    );
   };
 
   if (loading) {
@@ -81,13 +127,22 @@ const PostsFeed = () => {
   return (
     <div className="flex flex-col items-center gap-6 py-6 px-4 max-w-2xl mx-auto">
       {posts.map((post) => (
-        <Post key={post._id} post={post} />
+        <Post
+          key={post._id}
+          post={post}
+          onLikePost={handleLikePost}
+          onCommentPosted={handleCommentPosted}
+        />
       ))}
     </div>
   );
 };
 
-const Post = ({ post }) => {
+const Post = ({ post, onLikePost, onCommentPosted }) => {
+  const { data: session } = useSession();
+  const [showComments, setShowComments] = useState(false);
+  const [showCommentInput, setShowCommentInput] = useState(false);
+
   const formatTimeAgo = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -106,6 +161,26 @@ const Post = ({ post }) => {
     return `${diffInMonths}m ago`;
   };
 
+  const handleLikeClick = () => {
+    if (!session) {
+      alert("Please log in to like posts");
+      return;
+    }
+    onLikePost(post._id, post.isLiked);
+  };
+
+  const handleCommentClick = () => {
+    if (!session) {
+      alert("Please log in to comment");
+      return;
+    }
+    setShowCommentInput(!showCommentInput);
+  };
+
+  const handleShowAllComments = () => {
+    setShowComments(true);
+  };
+
   return (
     <div className="w-full rounded-xl overflow-hidden shadow-md bg-white border border-gray-200">
       <PostHeader
@@ -115,11 +190,57 @@ const Post = ({ post }) => {
         profilePicture={post.author?.profilePicture}
       />
       <PostImage imageUrl={post.media?.url} />
+
+      {/* Like and Comment Actions */}
+      <div className="px-4 pt-3">
+        <div className="flex items-center gap-4 mb-3">
+          <button
+            onClick={handleLikeClick}
+            className="flex items-center gap-1 text-gray-600 hover:text-red-500 transition-colors"
+          >
+            {post.isLiked ? (
+              <HeartFilled className="text-xl text-red-500" />
+            ) : (
+              <HeartOutlined className="text-xl" />
+            )}
+            <span className="text-sm font-medium">
+              {post.likes?.length || 0} likes
+            </span>
+          </button>
+
+          <button
+            onClick={handleCommentClick}
+            className="flex items-center gap-1 text-gray-600 hover:text-blue-500 transition-colors"
+          >
+            <MessageOutlined className="text-xl" />
+            <span className="text-sm font-medium">
+              {post.comments?.length || 0} comments
+            </span>
+          </button>
+        </div>
+      </div>
+
       <PostDescription
         username={post.author?.username || "Unknown User"}
         description={post.description}
       />
-      <PostCommentsInfo count={post.comments?.length || 0} />
+
+      {/* Comments Display */}
+      <CommentsDisplay
+        comments={post.comments}
+        onShowAllComments={handleShowAllComments}
+      />
+
+      {/* Comment Input */}
+      {showCommentInput && (
+        <div className="px-4 pb-4">
+          <AddComment
+            postId={post._id}
+            onCommentPosted={onCommentPosted}
+            className="text-sm"
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -163,12 +284,6 @@ const PostDescription = ({ username, description }) => (
   <div className="px-4 pt-3">
     <span className="font-semibold text-gray-800">{username}</span>{" "}
     <span className="text-gray-700">{description}</span>
-  </div>
-);
-
-const PostCommentsInfo = ({ count }) => (
-  <div className="px-4 pt-2 pb-4 text-sm text-gray-500 cursor-pointer hover:underline">
-    View all {count} comments
   </div>
 );
 

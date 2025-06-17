@@ -1,5 +1,6 @@
 import connectDB from "@/lib/mongodb";
 import Post from "@/models/Post";
+import User from "@/models/User";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 
@@ -9,11 +10,39 @@ export default async function handler(req, res) {
   switch (req.method) {
     case "GET":
       try {
-        const posts = await Post.find({})
-          .populate("author", "name username profilePicture")
-          .populate("comments.user", "name username profilePicture")
-          .sort({ createdAt: -1 })
-          .limit(20);
+        const session = await getServerSession(req, res, authOptions);
+
+        let posts;
+
+        if (session) {
+          // Get current user's following list
+          const currentUser = await User.findById(session.user.id).populate(
+            "following"
+          );
+          const followingIds = currentUser.following.map((user) => user._id);
+
+          // Include current user's posts and posts from followed users
+          const userIdsToShow = [...followingIds, session.user.id];
+
+          posts = await Post.find({ author: { $in: userIdsToShow } })
+            .populate("author", "name username profilePicture")
+            .populate("comments.user", "name username profilePicture")
+            .sort({ createdAt: -1 })
+            .limit(20);
+
+          // Add like status for current user
+          posts = posts.map((post) => ({
+            ...post.toObject(),
+            isLiked: post.likes.includes(session.user.id),
+          }));
+        } else {
+          // For non-authenticated users, show all posts
+          posts = await Post.find({})
+            .populate("author", "name username profilePicture")
+            .populate("comments.user", "name username profilePicture")
+            .sort({ createdAt: -1 })
+            .limit(20);
+        }
 
         res.status(200).json(posts);
       } catch (error) {

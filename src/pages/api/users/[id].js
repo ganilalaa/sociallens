@@ -40,6 +40,12 @@ export default async function handler(req, res) {
           .sort({ createdAt: -1 })
           .lean();
 
+        // Add like status for current user to each post
+        const postsWithLikeStatus = posts.map((post) => ({
+          ...post,
+          isLiked: post.likes.includes(session.user.id),
+        }));
+
         // Check if current user is following this user
         const currentUser = await User.findById(session.user.id);
         const isFollowing = currentUser.following.includes(id);
@@ -49,7 +55,7 @@ export default async function handler(req, res) {
 
         const profileData = {
           ...user,
-          posts,
+          posts: postsWithLikeStatus,
           isFollowing,
           isOwnProfile,
           followersCount: user.followers.length,
