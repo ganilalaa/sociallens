@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
@@ -12,11 +12,26 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   // Redirect if already logged in
-  if (session) {
-    router.push("/");
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      router.push("/");
+    }
+  }, [session, status, router]);
+
+  // Show loading while checking session
+  if (status === "loading") {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  // Don't render the form if already authenticated
+  if (status === "authenticated") {
     return null;
   }
 
@@ -37,7 +52,13 @@ export default function Login() {
       });
 
       if (result?.error) {
-        setError(result.error);
+        if (result.error === "CredentialsSignin") {
+          setError(
+            "Invalid email/username or password. Please check your credentials and try again."
+          );
+        } else {
+          setError(result.error);
+        }
       } else {
         router.push("/");
       }

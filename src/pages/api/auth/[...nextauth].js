@@ -24,7 +24,7 @@ export const authOptions = {
           }).select("+password");
 
           if (!user) {
-            throw new Error("No user found with this email/username");
+            return null; // This will trigger the CredentialsSignin error
           }
 
           const isPasswordValid = await bcrypt.compare(
@@ -33,7 +33,7 @@ export const authOptions = {
           );
 
           if (!isPasswordValid) {
-            throw new Error("Invalid password");
+            return null; // This will trigger the CredentialsSignin error
           }
 
           return {

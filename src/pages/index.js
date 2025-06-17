@@ -22,7 +22,7 @@ export default function Home() {
     );
   }
 
-  if (!session) {
+  if (status === "unauthenticated" || !session) {
     return null;
   }
 
