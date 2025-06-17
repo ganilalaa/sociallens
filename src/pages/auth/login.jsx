@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { signIn, useSession } from "next-auth/react";
 import SubmitButton from "@/components/authentication/SubmitButton";
 import SimpleInput from "@/components/authentication/SimpleInput";
 
@@ -8,8 +9,16 @@ export default function Login() {
   const [usernameOrEmail, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
+  const { data: session } = useSession();
+
+  // Redirect if already logged in
+  if (session) {
+    router.push("/");
+    return null;
+  }
 
   const onLogin = async () => {
     if (!usernameOrEmail || !password) {
@@ -17,10 +26,26 @@ export default function Login() {
       return;
     }
 
-    // Simulo login sukses
-    console.log("Logging in as:", usernameOrEmail);
+    setIsLoading(true);
     setError("");
-    router.push("/"); // Shko në feed
+
+    try {
+      const result = await signIn("credentials", {
+        email: usernameOrEmail,
+        password: password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        router.push("/");
+      }
+    } catch (error) {
+      setError("An error occurred during login.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -45,11 +70,13 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder="Email, username or phone number"
+              value={usernameOrEmail}
             />
             <SimpleInput
               onChange={(e) => setPassword(e.target.value)}
               type="password"
               placeholder="Password"
+              value={password}
             />
             <div className="w-full text-center text-sm">
               <Link href="/forgot-password" className="text-cyan-600">
@@ -57,7 +84,9 @@ export default function Login() {
               </Link>
             </div>
             <div onClick={onLogin}>
-              <SubmitButton>Log in</SubmitButton>
+              <SubmitButton disabled={isLoading}>
+                {isLoading ? "Logging in..." : "Log in"}
+              </SubmitButton>
             </div>
           </div>
         </div>

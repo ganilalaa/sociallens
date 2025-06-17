@@ -1,60 +1,108 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import SimpleInput from "@/components/authentication/SimpleInput"
-import SubmitButton from "@/components/authentication/SubmitButton"
+import { useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
+import SimpleInput from "@/components/authentication/SimpleInput";
+import SubmitButton from "@/components/authentication/SubmitButton";
 
 export default function Register() {
   const [formData, setFormData] = useState({
     email: "",
-    fullname: "",
+    name: "",
     username: "",
     password: "",
     image: null,
     bio: "",
-  })
+  });
 
-  const [errorMessage, setErrorMessage] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [step, setStep] = useState(1)
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [step, setStep] = useState(1);
+
+  const router = useRouter();
 
   const nextSubmit = () => {
-    setErrorMessage("")
-    const { email, fullname, username, password } = formData
+    setErrorMessage("");
+    const { email, name, username, password } = formData;
 
     if (step === 1) {
-      if (!email || !fullname || !username || !password) {
-        setErrorMessage("All fields are required.")
-        return
+      if (!email || !name || !username || !password) {
+        setErrorMessage("All fields are required.");
+        return;
       }
 
-      // Këtu mund të shtosh kontrollin ndaj backend më vonë
-      setStep((prevStep) => prevStep + 1)
+      if (password.length < 6) {
+        setErrorMessage("Password must be at least 6 characters.");
+        return;
+      }
+
+      setStep((prevStep) => prevStep + 1);
     } else {
-      setStep((prevStep) => prevStep + 1)
+      setStep((prevStep) => prevStep + 1);
     }
-  }
+  };
 
   const handleChange = (e) => {
     if (e.target.name === "image") {
-      setFormData({ ...formData, image: e.target.files[0] })
+      setFormData({ ...formData, image: e.target.files[0] });
     } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value })
+      setFormData({ ...formData, [e.target.name]: e.target.value });
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setErrorMessage("")
-    setSuccessMessage("Registration successful! (Placeholder)")
-    setTimeout(() => {
-      // simulate redirect
-    }, 2000)
-    setIsSubmitting(false)
-  }
+    e.preventDefault();
+    setIsSubmitting(true);
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          username: formData.username,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+
+      setSuccessMessage("Registration successful! Redirecting to login...");
+
+      // Auto-login after successful registration
+      setTimeout(async () => {
+        const result = await signIn("credentials", {
+          email: formData.email,
+          password: formData.password,
+          redirect: false,
+        });
+
+        if (result?.error) {
+          router.push("/auth/login");
+        } else {
+          router.push("/");
+        }
+      }, 2000);
+    } catch (error) {
+      setErrorMessage(
+        error.message || "Registration failed. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
@@ -73,7 +121,7 @@ export default function Register() {
               ) : (
                 <span>
                   Welcome to Social Lens{" "}
-                  <span className="text-[#1F2937]">{formData.fullname}</span>
+                  <span className="text-[#1F2937]">{formData.name}</span>
                 </span>
               )}
             </p>
@@ -90,9 +138,9 @@ export default function Register() {
                   />
                   <SimpleInput
                     type="text"
-                    name="fullname"
+                    name="name"
                     placeholder="Full Name"
-                    value={formData.fullname}
+                    value={formData.name}
                     onChange={handleChange}
                     isRequired={true}
                   />
@@ -172,5 +220,5 @@ export default function Register() {
         </form>
       </div>
     </div>
-  )
+  );
 }
