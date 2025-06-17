@@ -14,21 +14,48 @@ import {
 } from "@ant-design/icons";
 import EditProfileModal from "@/components/profile/EditProfileModal";
 import PostModal from "@/components/feed/PostModal";
+import connectDB from "@/lib/mongodb";
+import User from "@/models/User";
+import Post from "@/models/Post";
 
-export default function ProfilePage() {
+export default function ProfilePage({
+  profile: initialProfile,
+  posts: initialPosts,
+}) {
   const router = useRouter();
   const { id } = router.query;
   const { data: session, status } = useSession();
-  const [profile, setProfile] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [profile, setProfile] = useState(initialProfile);
+  const [posts, setPosts] = useState(initialPosts);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(
+    initialProfile?.isFollowing || false
+  );
   const [followLoading, setFollowLoading] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [showPostModal, setShowPostModal] = useState(false);
 
+  // Update profile when initialProfile changes (from SSG)
+  useEffect(() => {
+    if (initialProfile) {
+      setProfile(initialProfile);
+      setIsFollowing(initialProfile.isFollowing || false);
+    }
+  }, [initialProfile]);
+
+  // Update posts when initialPosts changes (from SSG)
+  useEffect(() => {
+    if (initialPosts) {
+      setPosts(initialPosts);
+    }
+  }, [initialPosts]);
+
+  // Fallback: If SSG didn't provide data, fetch it client-side
   const fetchProfile = useCallback(async () => {
+    if (initialProfile) return; // Skip if we have SSG data
+
     try {
       setIsLoading(true);
       setError("");
@@ -53,13 +80,13 @@ export default function ProfilePage() {
     } finally {
       setIsLoading(false);
     }
-  }, [id]);
+  }, [id, initialProfile]);
 
   useEffect(() => {
-    if (id && status !== "loading") {
+    if (id && status !== "loading" && !initialProfile) {
       fetchProfile();
     }
-  }, [id, status, fetchProfile]);
+  }, [id, status, fetchProfile, initialProfile]);
 
   const handleFollow = async () => {
     if (!session) {
@@ -365,4 +392,108 @@ export default function ProfilePage() {
       />
     </div>
   );
+}
+
+// SSG - Static Site Generation
+export async function getStaticProps({ params }) {
+  try {
+    await connectDB();
+
+    const { id } = params;
+
+    // Fetch user profile
+    const user = await User.findById(id)
+      .select("name username email profilePicture bio createdAt")
+      .lean();
+
+    if (!user) {
+      return {
+        notFound: true,
+      };
+    }
+
+    // Fetch user's posts
+    const posts = await Post.find({ author: id })
+      .populate("author", "name username profilePicture")
+      .populate("likes", "name username")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "author",
+          select: "name username profilePicture",
+        },
+      })
+      .sort({ createdAt: -1 })
+      .limit(12)
+      .lean();
+
+    // Get follower and following counts
+    const followersCount = await User.countDocuments({ following: id });
+    const followingCount = await User.findById(id).then(
+      (user) => user.following.length
+    );
+    const postsCount = await Post.countDocuments({ author: id });
+
+    const profile = {
+      ...user,
+      postsCount,
+      followersCount,
+      followingCount,
+      posts: posts,
+      isOwnProfile: false, // Will be determined client-side
+      isFollowing: false, // Will be determined client-side
+    };
+
+    return {
+      props: {
+        profile: JSON.parse(JSON.stringify(profile)),
+        posts: JSON.parse(JSON.stringify(posts)),
+      },
+      // ISR - Incremental Static Regeneration (revalidate every 60 seconds)
+      revalidate: 60,
+    };
+  } catch (error) {
+    console.error("Error in getStaticProps:", error);
+    return {
+      notFound: true,
+    };
+  }
+}
+
+// SSG - Generate static paths for popular users
+export async function getStaticPaths() {
+  try {
+    await connectDB();
+
+    // Get the most active users (users with most posts)
+    const activeUsers = await Post.aggregate([
+      {
+        $group: {
+          _id: "$author",
+          postCount: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { postCount: -1 },
+      },
+      {
+        $limit: 20,
+      },
+    ]);
+
+    const paths = activeUsers.map((user) => ({
+      params: { id: user._id.toString() },
+    }));
+
+    return {
+      paths,
+      fallback: "blocking", // Generate new pages on-demand
+    };
+  } catch (error) {
+    console.error("Error in getStaticPaths:", error);
+    return {
+      paths: [],
+      fallback: "blocking",
+    };
+  }
 }
