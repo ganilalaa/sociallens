@@ -125,7 +125,7 @@ const PostsFeed = () => {
   }
 
   return (
-    <div className="flex flex-col items-center gap-6 py-6 px-4 max-w-2xl mx-auto">
+    <div className="flex flex-col items-center gap-6 py-6 px-4 max-w-2xl mx-auto mt-[-60px]">
       {posts.map((post) => (
         <Post
           key={post._id}

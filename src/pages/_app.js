@@ -6,6 +6,7 @@ import BottomBar from "@/components/navigation/bottomBar";
 import { useRouter } from "next/router";
 import { createContext, useContext, useState } from "react";
 import { SocketProvider } from "@/contexts/SocketContext";
+import Story from "@/components/feed/story";
 
 // Create context for search state
 const SearchContext = createContext();
@@ -33,9 +34,9 @@ function MainContent({ children, isLayoutExcluded }) {
 
   return (
     <main
-      className={`pt-[8dvh] pb-[8dvh] transition-all duration-300 ${
-        !isLayoutExcluded ? "ml-16 xl:ml-64" : ""
-      } ${isSearchOpen ? "pt-[calc(8dvh+400px)]" : ""}`}
+      className={`transition-all duration-300 pb-[8dvh] ${
+        isSearchOpen ? "pt-[calc(8dvh+300px)]" : "pt-[8dvh]"
+      } ${!isLayoutExcluded ? "ml-16 xl:ml-64" : ""}`}
     >
       {children}
     </main>
@@ -63,6 +64,7 @@ export default function App({
           )}
 
           <MainContent isLayoutExcluded={isLayoutExcluded}>
+            {router.pathname === "/" && <Story />}
             <Component {...pageProps} />
           </MainContent>
 
