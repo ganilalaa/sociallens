@@ -21,6 +21,7 @@ export default function Register() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -143,13 +144,21 @@ export default function Register() {
                     isRequired={true}
                   />
                   <SimpleInput
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleChange}
                     isRequired={true}
                   />
+                  <label className="text-xs text-gray-600 flex items-center gap-2 ml-1">
+                    <input
+                      type="checkbox"
+                      checked={showPassword}
+                      onChange={() => setShowPassword(!showPassword)}
+                    />
+                    Show password
+                  </label>
                   <SubmitButton onClick={nextSubmit}>Next</SubmitButton>
                 </>
               )}

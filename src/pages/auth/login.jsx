@@ -8,20 +8,19 @@ import SimpleInput from "@/components/authentication/SimpleInput";
 export default function Login() {
   const [usernameOrEmail, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  // Redirect if already logged in
   useEffect(() => {
     if (status === "authenticated" && session) {
       router.push("/");
     }
   }, [session, status, router]);
 
-  // Show loading while checking session
   if (status === "loading") {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -30,7 +29,6 @@ export default function Login() {
     );
   }
 
-  // Don't render the form if already authenticated
   if (status === "authenticated") {
     return null;
   }
@@ -98,10 +96,18 @@ export default function Login() {
             />
             <SimpleInput
               onChange={(e) => setPassword(e.target.value)}
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               value={password}
             />
+            <label className="text-xs text-gray-600 flex items-center gap-2 ml-1">
+              <input
+                type="checkbox"
+                checked={showPassword}
+                onChange={() => setShowPassword(!showPassword)}
+              />
+              Show password
+            </label>
             <div className="w-full text-center text-sm">
               <Link href="/forgot-password" className="text-cyan-600">
                 Forgot password?
