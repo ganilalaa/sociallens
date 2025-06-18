@@ -21,6 +21,7 @@ export default function Register() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -81,7 +82,6 @@ export default function Register() {
 
       setSuccessMessage("Registration successful! Redirecting to login...");
 
-      // Redirect to login page after successful registration
       setTimeout(() => {
         router.push("/auth/login");
       }, 2000);
@@ -98,11 +98,12 @@ export default function Register() {
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="bg-white p-10 rounded-lg shadow-md max-w-sm w-full text-center">
         <h1
-          className="text-5xl mb-5 text-gray-800 font-handwriting font-bold"
+          className="text-5xl mb-1 text-gray-800 font-handwriting font-bold"
           style={{ fontFamily: "'Lucida Handwriting', cursive" }}
         >
           Social Lens
         </h1>
+        <p className="text-sm text-gray-500 mb-4">Connect. Share. Discover.</p>
         <form onSubmit={handleSubmit}>
           <div className="flex gap-4 flex-col mb-3">
             <p className="text-gray-400 font-bold">
@@ -143,13 +144,21 @@ export default function Register() {
                     isRequired={true}
                   />
                   <SimpleInput
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleChange}
                     isRequired={true}
                   />
+                  <label className="text-xs text-gray-600 flex items-center gap-2 ml-1">
+                    <input
+                      type="checkbox"
+                      checked={showPassword}
+                      onChange={() => setShowPassword(!showPassword)}
+                    />
+                    Show password
+                  </label>
                   <SubmitButton onClick={nextSubmit}>Next</SubmitButton>
                 </>
               )}
