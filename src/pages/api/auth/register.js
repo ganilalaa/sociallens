@@ -1,6 +1,31 @@
+import { formidable } from "formidable";
+import path from "path";
+import fs from "fs";
 import connectDB from "@/lib/mongodb";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
+// Utility to parse form with formidable
+const parseForm = (req) =>
+  new Promise((resolve, reject) => {
+    const form = formidable({
+      uploadDir: path.join(process.cwd(), "public", "uploads"),
+      keepExtensions: true,
+      maxFileSize: 5 * 1024 * 1024,
+      multiples: false,
+    });
+
+    form.parse(req, (err, fields, files) => {
+      if (err) reject(err);
+      else resolve({ fields, files });
+    });
+  });
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -10,7 +35,14 @@ export default async function handler(req, res) {
   try {
     await connectDB();
 
-    const { name, email, username, password } = req.body;
+    const { fields, files } = await parseForm(req);
+
+    const name = fields.name?.[0] || "";
+    const email = fields.email?.[0] || "";
+    const username = fields.username?.[0] || "";
+    const password = fields.password?.[0] || "";
+    const bio = fields.bio?.[0] || "";
+    const imageFile = files.image?.[0];
 
     // Validation
     if (!name || !email || !username || !password) {
@@ -23,7 +55,6 @@ export default async function handler(req, res) {
         .json({ message: "Password must be at least 6 characters" });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({
       $or: [{ email }, { username }],
     });
@@ -37,24 +68,27 @@ export default async function handler(req, res) {
       });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    // Create user
-    const user = await User.create({
+    const newUser = new User({
       name,
       email,
       username,
       password: hashedPassword,
+      bio,
+      profilePicture: imageFile
+        ? `/uploads/${path.basename(imageFile.filepath)}`
+        : null,
     });
 
-    // Remove password from response
+    await newUser.save();
+
     const userResponse = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      username: user.username,
-      profilePicture: user.profilePicture,
+      id: newUser._id,
+      name: newUser.name,
+      email: newUser.email,
+      username: newUser.username,
+      profilePicture: newUser.profilePicture,
     };
 
     res.status(201).json({

@@ -54,45 +54,46 @@ export default function Register() {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setErrorMessage("");
-    setSuccessMessage("");
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  setErrorMessage("");
+  setSuccessMessage("");
 
-    try {
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          username: formData.username,
-          password: formData.password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
-      }
-
-      setSuccessMessage("Registration successful! Redirecting to login...");
-
-      setTimeout(() => {
-        router.push("/auth/login");
-      }, 2000);
-    } catch (error) {
-      setErrorMessage(
-        error.message || "Registration failed. Please try again."
-      );
-    } finally {
-      setIsSubmitting(false);
+  try {
+    const formDataToSend = new FormData();
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("name", formData.name);
+    formDataToSend.append("username", formData.username);
+    formDataToSend.append("password", formData.password);
+    formDataToSend.append("bio", formData.bio);
+    if (formData.image) {
+      formDataToSend.append("image", formData.image);
     }
-  };
+
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      body: formDataToSend, // S'ka headers fare, sepse FormData i vendos vetë
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Registration failed");
+    }
+
+    setSuccessMessage("Registration successful! Redirecting to login...");
+
+    setTimeout(() => {
+      router.push("/auth/login");
+    }, 2000);
+  } catch (error) {
+    setErrorMessage(error.message || "Registration failed. Please try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
