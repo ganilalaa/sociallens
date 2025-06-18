@@ -5,7 +5,7 @@ const nextConfig = {
   reactStrictMode: true,
 
   eslint: {
-    ignoreDuringBuilds: true, // ✅ S'ndalon build-in për lint errors
+    ignoreDuringBuilds: true,
   },
 
   webpack: (config) => {

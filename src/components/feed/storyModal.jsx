@@ -11,13 +11,11 @@ const StoryModal = ({ story, onClose, nextStory, previousStory }) => {
   const stories = story?.stories || [];
   const currentStory = stories[currentIndex];
 
-  // Initialize progress bar
   useEffect(() => {
     setCurrentIndex(0);
     setProgress(new Array(stories.length).fill(0));
   }, [story]);
 
-  // Timer logic for progress bar
   useEffect(() => {
     clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
@@ -32,7 +30,6 @@ const StoryModal = ({ story, onClose, nextStory, previousStory }) => {
     return () => clearInterval(intervalRef.current);
   }, [currentIndex]);
 
-  // Auto-next when progress completes
   useEffect(() => {
     if (progress[currentIndex] >= 100) {
       clearInterval(intervalRef.current);
@@ -77,7 +74,7 @@ const StoryModal = ({ story, onClose, nextStory, previousStory }) => {
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center">
       <div className="relative w-[380px] h-[680px] sm:w-[420px] sm:h-[740px] bg-black flex flex-col items-center justify-center px-4 rounded-lg">
-        {/* Close button */}
+
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-white text-3xl font-bold z-50"
@@ -85,7 +82,6 @@ const StoryModal = ({ story, onClose, nextStory, previousStory }) => {
           &times;
         </button>
 
-        {/* Progress bars */}
         <div className="absolute top-2 left-2 right-2 flex gap-1 px-4 z-40">
           {stories.map((_, i) => (
             <div
@@ -100,12 +96,10 @@ const StoryModal = ({ story, onClose, nextStory, previousStory }) => {
           ))}
         </div>
 
-        {/* Username */}
         <div className="absolute top-10 left-4 z-40 text-white font-semibold text-sm sm:text-base">
           {story.username || "User"}
         </div>
 
-        {/* Story content */}
         <div className="w-full h-full flex items-center justify-center mt-12">
           <div className="w-full max-h-full overflow-hidden rounded-lg">
             {currentStory?.endsWith(".mp4") ? (
@@ -125,7 +119,6 @@ const StoryModal = ({ story, onClose, nextStory, previousStory }) => {
           </div>
         </div>
 
-        {/* Message input & emoji */}
         <div className="absolute bottom-4 w-full px-4 flex items-center justify-between text-white z-40">
           <div className="flex items-center gap-2 w-full">
             <input
@@ -140,7 +133,6 @@ const StoryModal = ({ story, onClose, nextStory, previousStory }) => {
           <button className="ml-3 text-2xl">❤️</button>
         </div>
 
-        {/* Previous / Next buttons */}
         <div className="absolute -left-14 top-1/2 transform -translate-y-1/2 z-50">
           <button
             className="w-14 h-14 rounded-full bg-black bg-opacity-50 hover:bg-opacity-70 text-white flex items-center justify-center shadow-lg backdrop-blur"

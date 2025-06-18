@@ -15,30 +15,40 @@ const Story = () => {
   const [storyHistory, setStoryHistory] = useState([]);
 
   useEffect(() => {
-    const mockUser = {
-      id: 1,
-      username: "you",
-      profile_img: "/default-avatar.png",
+    const fetchStories = async () => {
+      try {
+        const [meRes, friendsRes] = await Promise.all([
+          fetch("/api/stories/me"),
+          fetch("/api/stories"),
+        ]);
+
+        const myData = await meRes.json();
+        const friendData = await friendsRes.json();
+
+        if (meRes.ok && myData) {
+          setCurrentUser({
+            id: myData.userId,
+            username: myData.username,
+            profile_img: myData.profilePictureUrl || "/default-avatar.png",
+          });
+          setUserStories(myData.stories || []);
+        } else {
+          setCurrentUser({
+            id: 0,
+            username: "You",
+            profile_img: "/default-avatar.png",
+          });
+        }
+
+        if (friendsRes.ok && Array.isArray(friendData)) {
+          setFriendStories(friendData);
+        }
+      } catch (err) {
+        console.error("Failed to load stories", err);
+      }
     };
-    setCurrentUser(mockUser);
 
-    const mockFriendStories = [
-      {
-        userId: 2,
-        username: "friend1",
-        profilePictureUrl: "/default-avatar.png",
-        stories: ["/story1.jpg", "/story2.jpg"],
-      },
-      {
-        userId: 3,
-        username: "friend2",
-        profilePictureUrl: "/default-avatar.png",
-        stories: ["/story3.jpg"],
-      },
-    ];
-
-    setUserStories(["/your-story1.jpg", "/your-story2.jpg"]);
-    setFriendStories(mockFriendStories);
+    fetchStories();
   }, []);
 
   const handleSelectedStory = (story) => {
@@ -79,7 +89,7 @@ const Story = () => {
                   } overflow-hidden`}
                 >
                   <img
-                    src={currentUser.profile_img}
+                    src={currentUser.profile_img || "/default-avatar.png"}
                     alt="Your Story"
                     className="w-full h-full object-cover"
                   />
@@ -106,7 +116,7 @@ const Story = () => {
                 user={{
                   id: story.userId,
                   username: story.username ?? "Unknown",
-                  profile_img: story.profilePictureUrl,
+                  profile_img: story.profilePictureUrl || "/default-avatar.png",
                 }}
                 isSelected={true}
                 onClick={() => handleSelectedStory(story)}
@@ -117,9 +127,44 @@ const Story = () => {
 
       {showUpload && (
         <UploadStory
-          onUpload={(file) => {
-            alert("Pretend uploading story...");
-            setShowUpload(false);
+          onUpload={async (file) => {
+            try {
+              const formData = new FormData();
+              formData.append("file", file);
+
+              const uploadRes = await fetch("/api/upload", {
+                method: "POST",
+                body: formData,
+              });
+
+              if (!uploadRes.ok) {
+                const text = await uploadRes.text();
+                console.error("Upload API error:", text);
+                throw new Error("Upload failed");
+              }
+
+              const { url, type } = await uploadRes.json();
+              const cleanType = type.startsWith("image") ? "image" : "video";
+
+              await fetch("/api/stories", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ url, type: cleanType }),
+              });
+
+              const meRes = await fetch("/api/stories/me");
+              const myData = await meRes.json();
+              setUserStories(myData?.stories || []);
+              setCurrentUser({
+                id: myData.userId,
+                username: myData.username,
+                profile_img: myData.profilePictureUrl || "/default-avatar.png",
+              });
+            } catch (e) {
+              console.error("Failed to upload story", e);
+            } finally {
+              setShowUpload(false);
+            }
           }}
           onClose={() => setShowUpload(false)}
         />
