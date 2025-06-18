@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import SwitchProfile from "../navigation/SwitchProfile"
+import { useEffect, useState } from "react";
+import SwitchProfile from "../navigation/switchProfile";
 
 const dummyProfile = {
   id: 1,
@@ -11,7 +11,7 @@ const dummyProfile = {
   profilePicture: {
     url: "https://i.pravatar.cc/150?img=1",
   },
-}
+};
 
 const dummySuggestions = [
   {
@@ -32,20 +32,20 @@ const dummySuggestions = [
     profilePicture: { url: "https://i.pravatar.cc/150?img=4" },
     isSponsored: true,
   },
-]
+];
 
 const SuggestedFriends = () => {
-  const [profileId, setProfileId] = useState(null)
-  const [profiles, setProfiles] = useState([])
+  const [profileId, setProfileId] = useState(null);
+  const [profiles, setProfiles] = useState([]);
 
   useEffect(() => {
-    setProfileId(dummyProfile)
-    setProfiles(dummySuggestions)
-  }, [])
+    setProfileId(dummyProfile);
+    setProfiles(dummySuggestions);
+  }, []);
 
   const follow = (id) => {
-    console.log("Followed user with ID:", id)
-  }
+    console.log("Followed user with ID:", id);
+  };
 
   return (
     <aside className="hidden xl:block lg:block lg:ml-16 xl:ml-7 mt-6 w-[315px] text-sm">
@@ -60,7 +60,9 @@ const SuggestedFriends = () => {
 
         <div className="w-full flex justify-between mt-6 mb-2">
           <p className="text-[#737373] font-semibold">Suggested for you</p>
-          <p className="text-black hover:text-[#a7a6a6] cursor-pointer text-xs">See All</p>
+          <p className="text-black hover:text-[#a7a6a6] cursor-pointer text-xs">
+            See All
+          </p>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -84,7 +86,7 @@ const SuggestedFriends = () => {
         </div>
       </div>
     </aside>
-  )
-}
+  );
+};
 
-export default SuggestedFriends
+export default SuggestedFriends;

@@ -1,16 +1,16 @@
-"use client"
+"use client";
 
-import ProfileUser from "@/components/feed/ProfileUser"
+import ProfileUser from "@/components/feed/profileUser";
 
 const ProfilePic = ({ profilePic, css }) => {
   const user = {
     username: "",
     profile_img: profilePic,
-  }
+  };
 
   const handleUserClick = () => {
-    console.log("Clicked")
-  }
+    console.log("Clicked");
+  };
 
   return (
     <div>
@@ -21,7 +21,7 @@ const ProfilePic = ({ profilePic, css }) => {
         isSelected={false}
       />
     </div>
-  )
-}
+  );
+};
 
-export default ProfilePic
+export default ProfilePic;

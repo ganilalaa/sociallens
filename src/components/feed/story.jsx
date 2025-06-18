@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import ProfileUser from "@/components/feed/ProfileUser";
+import ProfileUser from "@/components/feed/profileUser";
 import UploadStory from "@/components/feed/uploadStory";
 import StoryModal from "@/components/feed/storyModal";
 
@@ -172,9 +172,7 @@ const Story = () => {
               const last = storyHistory[storyHistory.length - 1];
               setActiveUserStory(last.user);
               setActiveStoryIndex(last.index);
-              setStoryHistory((prev) =>
-                prev.slice(0, prev.length - 1)
-              );
+              setStoryHistory((prev) => prev.slice(0, prev.length - 1));
             } else {
               setActiveUserStory(null);
               setActiveStoryIndex(null);
