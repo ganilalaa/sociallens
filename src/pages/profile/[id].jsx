@@ -121,6 +121,16 @@ export default function ProfilePage({
     }
   };
 
+  useEffect(() => {
+  if (session?.user?.id && profile?._id) {
+    setProfile((prev) => ({
+      ...prev,
+      isOwnProfile: session.user.id === profile._id,
+    }));
+  }
+}, [session?.user?.id, profile?._id]);
+
+
   const handleProfileUpdated = useCallback((updatedProfile) => {
     // Update the local profile state with the new data
     setProfile((prev) => ({
