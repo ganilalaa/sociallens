@@ -23,7 +23,7 @@ const PostsFeed = () => {
     try {
       setLoading(true);
       const response = await fetch("/api/posts");
-
+      console.log("response",response);
       if (!response.ok) {
         throw new Error("Failed to fetch posts");
       }
@@ -53,7 +53,6 @@ const PostsFeed = () => {
 
       const data = await response.json();
 
-      // Update the post in the posts array
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post._id === postId
@@ -62,13 +61,12 @@ const PostsFeed = () => {
         )
       );
     } catch (error) {
-      console.error("Error liking post:", error);
+      console.error("Error liksing post:", error);
       alert("Failed to like post. Please try again.");
     }
   };
 
   const handleCommentPosted = (updatedPost) => {
-    // Update the post in the posts array
     setPosts((prevPosts) =>
       prevPosts.map((post) =>
         post._id === updatedPost._id ? updatedPost : post
