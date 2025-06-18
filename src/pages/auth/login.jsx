@@ -77,6 +77,9 @@ export default function Login() {
             <div className="text-center">
               <h1 className="text-4xl font-bold">social-lens</h1>
               <p className="text-gray-500">closer together</p>
+              <p className="text-xs text-gray-400 mt-1">
+                A simple way to connect and share with friends.
+              </p>
             </div>
           </div>
 
