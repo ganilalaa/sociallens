@@ -39,7 +39,7 @@ export default function UploadStory({ onClose, onUpload }) {
       try {
         // simulate upload
         await wait(1000);
-        const localUrl = URL.createObjectURL(file);
+        await onUpload(file);
         await onUpload(localUrl); // we pass URL not file (mock)
         setStatus("success");
         await wait(1500);
