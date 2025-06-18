@@ -1,111 +1,200 @@
-# Social Lens - Next.js Social Media App
+# Social Lens - Modern Social Media Platform
 
-A modern social media application built with Next.js, MongoDB, and NextAuth.js.
+A full-featured social media application built with Next.js, featuring real-time messaging, stories, posts, and user interactions. Social Lens provides a complete social networking experience with modern UI/UX design.
 
-## Features
+## 🌐 Live Application
 
-- 🔐 **Authentication**: Secure user registration and login with NextAuth.js
-- 📱 **Responsive Design**: Mobile-first design with Tailwind CSS
-- 🗄️ **Database**: MongoDB with Mongoose ODM
-- 🔒 **Protected Routes**: Middleware-based route protection
-- 📝 **Posts**: Create and view posts with images
-- 🖼️ **Create Post Modal**: Reusable modal for creating posts with image upload
-- 👥 **User Profiles**: User management with profile pictures and bios
-- 💬 **Comments**: Comment system on posts
-- ❤️ **Likes**: Like/unlike posts functionality
+**Visit the live application:** [Social Lens](https://sociallens-omega.vercel.app/auth/login?callbackUrl=https%3A%2F%2Fsociallens-omega.vercel.app%2F)
 
-## Tech Stack
+## ✨ Features
 
-- **Frontend**: Next.js 15, React 19, Tailwind CSS
-- **Backend**: Next.js API Routes
-- **Database**: MongoDB with Mongoose
-- **Authentication**: NextAuth.js
-- **Styling**: Tailwind CSS v4
-- **Icons**: Ant Design Icons
+### 🔐 Authentication & User Management
 
-## Prerequisites
+- Secure user registration and login with NextAuth.js
+- User profile management with customizable avatars and bios
+- Follow/unfollow functionality
+- User search and discovery
+
+### 📱 Social Features
+
+- **Posts**: Create, view, like, and comment on posts with image/video support
+- **Stories**: Share temporary stories that expire after 24 hours
+- **Real-time Chat**: Instant messaging with Socket.IO
+- **Feed**: Personalized feed showing posts from followed users
+- **User Profiles**: Detailed user profiles with posts and followers
+
+### 🎨 Modern UI/UX
+
+- Responsive design optimized for mobile and desktop
+- Modern UI with Tailwind CSS
+- Real-time notifications and interactions
+- Smooth animations and transitions
+
+### 🔧 Technical Features
+
+- Server-side rendering (SSR) for optimal performance
+- Real-time updates with WebSocket connections
+- Image upload and storage
+- Protected routes and API endpoints
+- Comprehensive error handling
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 15, React 19, Tailwind CSS v4
+- **Backend**: Next.js API Routes, Socket.IO
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: NextAuth.js with JWT
+- **Real-time**: Socket.IO for live messaging
+- **File Upload**: Formidable for image handling
+- **Styling**: Tailwind CSS with Ant Design Icons
+- **Testing**: Jest with React Testing Library
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
 
 - Node.js 18+
-- MongoDB (local or Atlas)
 - npm or yarn
+- MongoDB (local installation or MongoDB Atlas account)
 
-## Installation
+## 🚀 Installation
 
-1. **Clone the repository**
+### 1. Clone the Repository
 
-   ```bash
-   git clone <repository-url>
-   cd sociallens
-   ```
+```bash
+git clone <repository-url>
+cd sociallens
+```
 
-2. **Install dependencies**
+### 2. Install Dependencies
 
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
-3. **Set up environment variables**
-   Create a `.env` file in the root directory:
+### 3. Environment Setup
 
-   ```env
-   # MongoDB
-   MONGODB_URI=mongodb://localhost:27017/sociallens
-   # For production: mongodb+srv://username:password@cluster.mongodb.net/sociallens
+Create a `.env.local` file in the root directory:
 
-   # NextAuth
-   NEXTAUTH_URL=http://localhost:3000
-   NEXTAUTH_SECRET=your-secret-key-here-change-in-production
-   ```
+```env
+# MongoDB Connection
+MONGODB_URI=mongodb://localhost:27017/sociallens
+# For production: mongodb+srv://username:password@cluster.mongodb.net/sociallens
 
-4. **Set up MongoDB**
+# NextAuth Configuration
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key-here
 
-   - **Local MongoDB**: Install and start MongoDB locally
-   - **MongoDB Atlas**: Create a cluster and get your connection string
+# For production, use a strong secret:
+# NEXTAUTH_SECRET=$(openssl rand -base64 32)
+```
 
-5. **Generate NextAuth Secret**
+### 4. Database Setup
 
-   ```bash
-   openssl rand -base64 32
-   ```
+**Option A: Local MongoDB**
 
-   Use the output as your `NEXTAUTH_SECRET`
+```bash
+# Install MongoDB locally and start the service
+mongod
+```
 
-6. **Run the development server**
+**Option B: MongoDB Atlas**
 
-   ```bash
-   npm run dev
-   ```
+1. Create a MongoDB Atlas account
+2. Create a new cluster
+3. Get your connection string
+4. Replace `MONGODB_URI` in your `.env.local` file
 
-7. **Open your browser**
-   Navigate to [http://localhost:3000](http://localhost:3000)
+### 5. Generate NextAuth Secret (Optional but Recommended)
 
-## Project Structure
+```bash
+openssl rand -base64 32
+```
+
+Use the output as your `NEXTAUTH_SECRET` in the environment file.
+
+### 6. Run the Development Server
+
+```bash
+npm run dev
+```
+
+### 7. Open Your Browser
+
+Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 📁 Project Structure
 
 ```
 sociallens/
 ├── src/
 │   ├── components/          # React components
-│   │   ├── authentication/  # Auth-related components
-│   │   ├── feed/           # Post feed components
-│   │   └── navigation/     # Navigation components
+│   │   ├── authentication/  # Login, register, logout components
+│   │   ├── chat/           # Real-time messaging components
+│   │   ├── feed/           # Posts, stories, comments components
+│   │   ├── layout/         # Layout and footer components
+│   │   ├── navigation/     # Navigation bars and sidebars
+│   │   └── profile/        # User profile components
+│   ├── contexts/           # React contexts (Socket.IO)
 │   ├── lib/                # Utility functions
 │   │   ├── mongodb.js      # Database connection
-│   │   └── auth.js         # Auth utilities
-│   ├── models/             # Mongoose models
+│   │   └── auth.js         # Authentication utilities
+│   ├── models/             # Mongoose data models
 │   │   ├── User.js         # User schema
-│   │   └── Post.js         # Post schema
-│   ├── pages/              # Next.js pages
-│   │   ├── api/            # API routes
-│   │   │   ├── auth/       # Auth API endpoints
-│   │   │   └── posts/      # Posts API endpoints
-│   │   └── auth/           # Auth pages
+│   │   ├── Post.js         # Post schema
+│   │   ├── Story.js        # Story schema
+│   │   └── Message.js      # Message schema
+│   ├── pages/              # Next.js pages and API routes
+│   │   ├── api/            # API endpoints
+│   │   │   ├── auth/       # Authentication endpoints
+│   │   │   ├── messages/   # Messaging endpoints
+│   │   │   ├── posts/      # Posts endpoints
+│   │   │   ├── stories/    # Stories endpoints
+│   │   │   ├── users/      # User management endpoints
+│   │   │   ├── upload.js   # File upload endpoint
+│   │   │   └── socketio.js # Socket.IO server
+│   │   ├── auth/           # Authentication pages
+│   │   ├── messages.jsx    # Messaging page
+│   │   ├── profile/        # User profile pages
+│   │   └── index.js        # Home page
 │   └── styles/             # Global styles
-├── public/                 # Static assets
-├── middleware.js           # Next.js middleware
-└── next.config.mjs         # Next.js configuration
+├── public/                 # Static assets and uploads
+├── __mocks__/             # Jest mocks for testing
+├── middleware.js          # Next.js middleware for route protection
+└── next.config.mjs        # Next.js configuration
 ```
 
-## API Endpoints
+## 🗄️ Database Models
+
+### User Model
+
+- Basic info: name, email, username, password
+- Profile: profilePicture, bio
+- Social: followers, following arrays
+- Posts: array of user's posts
+- Timestamps: createdAt, updatedAt
+
+### Post Model
+
+- Content: description, media (image/video)
+- Social: likes, comments arrays
+- Metadata: author reference, timestamps
+- Features: sponsored posts support
+
+### Story Model
+
+- Content: media (image/video)
+- Metadata: user reference, timestamps
+- Expiration: automatic 24-hour expiration
+
+### Message Model
+
+- Content: message text
+- Metadata: sender, receiver references
+- Status: read/unread tracking
+- Timestamps: createdAt, updatedAt
+
+## 🔌 API Endpoints
 
 ### Authentication
 
@@ -114,138 +203,107 @@ sociallens/
 
 ### Posts
 
-- `GET /api/posts` - Fetch all posts
-- `POST /api/posts` - Create a new post
+- `GET /api/posts` - Fetch posts
+- `POST /api/posts` - Create post
+- `POST /api/posts/[id]/like` - Like/unlike post
+- `POST /api/posts/[id]/comment` - Add comment
 
-## Database Models
+### Users
 
-### User Schema
+- `GET /api/users/search` - Search users
+- `GET /api/users/[id]` - Get user profile
+- `POST /api/users/[id]/follow` - Follow/unfollow user
 
-```javascript
-{
-  name: String,
-  email: String (unique),
-  username: String (unique),
-  password: String (hashed),
-  profilePicture: String,
-  bio: String,
-  followers: [User],
-  following: [User],
-  posts: [Post],
-  createdAt: Date,
-  updatedAt: Date
-}
-```
+### Stories
 
-### Post Schema
+- `GET /api/stories` - Fetch stories
+- `POST /api/stories` - Create story
+- `GET /api/stories/me` - Get user's stories
 
-```javascript
-{
-  author: User (ref),
-  description: String,
-  media: {
-    url: String,
-    type: String (enum: 'image', 'video')
-  },
-  likes: [User],
-  comments: [{
-    user: User,
-    text: String,
-    createdAt: Date
-  }],
-  isSponsored: Boolean,
-  createdAt: Date,
-  updatedAt: Date
-}
-```
+### Messages
 
-## Environment Variables
+- `GET /api/messages` - Fetch conversations
+- `POST /api/messages` - Send message
+- `PUT /api/messages/read` - Mark messages as read
+- `DELETE /api/messages` - Delete message
 
-| Variable          | Description               | Example                                |
-| ----------------- | ------------------------- | -------------------------------------- |
-| `MONGODB_URI`     | MongoDB connection string | `mongodb://localhost:27017/sociallens` |
-| `NEXTAUTH_URL`    | Your app's base URL       | `http://localhost:3000`                |
-| `NEXTAUTH_SECRET` | Secret for JWT encryption | `your-secret-key-here`                 |
+### File Upload
 
-## Deployment
+- `POST /api/upload` - Upload images/videos
+
+## 🚀 Deployment
 
 ### Vercel (Recommended)
 
 1. Push your code to GitHub
 2. Connect your repository to Vercel
-3. Add environment variables in Vercel dashboard
+3. Add environment variables in Vercel dashboard:
+   - `MONGODB_URI`
+   - `NEXTAUTH_URL`
+   - `NEXTAUTH_SECRET`
 4. Deploy!
 
 ### Other Platforms
 
-- Set up environment variables
-- Build the project: `npm run build`
-- Start the production server: `npm start`
+1. Build the project:
 
-## Security Features
+   ```bash
+   npm run build
+   ```
+
+2. Start the production server:
+
+   ```bash
+   npm start
+   ```
+
+3. Set up environment variables on your hosting platform
+
+## 🧪 Testing
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+## 🔒 Security Features
 
 - ✅ Password hashing with bcryptjs
 - ✅ JWT-based authentication
-- ✅ Protected API routes
-- ✅ Input validation
+- ✅ Protected API routes with middleware
+- ✅ Input validation and sanitization
 - ✅ CORS protection
-- ✅ Rate limiting (can be added)
+- ✅ Secure file upload handling
 
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License.
 
-## Support
+## 🆘 Support
 
-For support, email support@sociallens.com or create an issue in the repository.
+If you encounter any issues or have questions:
 
-## Create Post Feature
+1. Check the existing issues in the repository
+2. Create a new issue with detailed information
+3. Include steps to reproduce the problem
 
-The application includes a reusable modal component for creating posts:
+## 🔄 Updates
 
-### Features:
+Stay updated with the latest features and improvements by:
 
-- **Image Upload**: Drag and drop or click to upload images
-- **Image Preview**: Real-time preview of selected images
-- **File Validation**: Supports common image formats with 5MB size limit
-- **Description**: Rich text description with character counter (500 max)
-- **Authentication**: Requires user login to create posts
-- **Responsive Design**: Works on all device sizes
+- Watching the repository
+- Checking the releases page
+- Following the development branch
 
-### Usage:
+---
 
-1. Click the "Create" button in the sidebar
-2. Upload an image by clicking "Choose File" or dragging an image
-3. Add a description (optional but recommended)
-4. Click "Create Post" to publish
-
-### Technical Details:
-
-- **Component**: `CreatePostModal.jsx` in `/src/components/feed/`
-- **API Endpoint**: `POST /api/posts`
-- **Image Storage**: Base64 encoding (for demo purposes)
-- **Authentication**: NextAuth.js session-based
-- **Validation**: Client and server-side validation
-
-### Post Model Structure:
-
-```javascript
-{
-  author: User (ref),
-  description: String (max 500 chars),
-  media: {
-    url: String (base64 or URL),
-    type: String (enum: 'image', 'video')
-  },
-  createdAt: Date (auto-generated),
-  updatedAt: Date (auto-updated)
-}
-```
+**Built with ❤️ using Next.js, React, and MongoDB**
